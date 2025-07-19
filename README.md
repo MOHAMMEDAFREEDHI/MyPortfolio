@@ -34,10 +34,10 @@ If you prefer editing locally:
 
 ```bash
 # Step 1: Clone the repository
-git clone https://github.com/mohammedafreedhi/afxlabs.git
+git clone https://github.com/MOHAMMEDAFREEDHI/MyPortfolio.git
 
 # Step 2: Navigate into the project folder
-cd <YOUR-REPO-NAME>
+cd afxlabs
 
 # Step 3: Install dependencies
 npm install
