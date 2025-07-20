@@ -4,7 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: "/MyPortfolio/", // 👈 add your repo name here
+  base: "./", // 🟢 Set base to relative paths
   server: {
     host: "::",
     port: 8080,
