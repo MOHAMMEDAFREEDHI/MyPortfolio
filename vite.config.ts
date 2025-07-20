@@ -4,18 +4,28 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: "/MyPortfolio/", // 👈 add your repo name here
+  // ✅ Set base path for GitHub Pages deployment
+  base: mode === "production" ? "/MyPortfolio/" : "/",
+
   server: {
-    host: "::",
-    port: 8080,
+    host: "0.0.0.0", // 👈 Better for LAN testing
+    port: 8080,      // 👈 Custom port
+    strictPort: true, // 👈 Fail if port 8080 is busy
   },
+
   plugins: [
-    react(),
-    mode === "development" && componentTagger(),
-  ].filter(Boolean),
+    react(),                      // React SWC plugin
+    mode === "development" && componentTagger(), // Only in dev
+  ].filter(Boolean),              // Remove false plugins
+
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(__dirname, "src"), // 👈 Clean alias for imports
     },
+  },
+
+  build: {
+    outDir: "dist", // 👈 Output folder for production build
+    sourcemap: true, // 👈 Helpful for debugging
   },
 }));

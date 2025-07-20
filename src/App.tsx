@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Loader from "@/components/Loader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster as RadixToaster } from "@/components/ui/toaster";
-import { Toaster as SonnerToaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Auth from "./components/Auth";
@@ -13,41 +13,34 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const queryClient = new QueryClient();
 
-// Dynamically set basename for GitHub Pages or local
-const baseName =
-  import.meta.env.MODE === "production" ? "/MyPortfolio" : "/";
-
 const App = () => {
   const [loading, setLoading] = useState(true);
-
-  // Simulate a loader delay (optional)
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1200);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
-          <RadixToaster />
-          <SonnerToaster />
+          <Toaster />
+          <Sonner />
           <AnimatePresence mode="wait">
             {loading ? (
               <Loader onComplete={() => setLoading(false)} />
             ) : (
               <motion.div
                 key="main-content"
-                initial={{ opacity: 0, filter: "blur(8px)" }}
+                initial={{ opacity: 0, filter: "blur(10px)" }}
                 animate={{
                   opacity: 1,
                   filter: "blur(0px)",
-                  transition: { delay: 0.3 },
+                  transition: { delay: 0.2 }
                 }}
-                exit={{ opacity: 0, filter: "blur(8px)" }}
-                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: 1.2,
+                  ease: [0.22, 1, 0.36, 1]
+                }}
               >
-                <BrowserRouter basename={baseName}>
+                <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/auth" element={<Auth />} />
