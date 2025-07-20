@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Loader from "@/components/Loader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -13,11 +13,18 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const queryClient = new QueryClient();
 
+// Dynamically set basename for GitHub Pages or local
+const baseName =
+  import.meta.env.MODE === "production" ? "/MyPortfolio" : "/";
+
 const App = () => {
   const [loading, setLoading] = useState(true);
 
-  // Auto detect base path
-  const baseName = import.meta.env.MODE === "production" ? "/MyPortfolio" : "/";
+  // Simulate a loader delay (optional)
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -25,24 +32,20 @@ const App = () => {
         <TooltipProvider>
           <RadixToaster />
           <SonnerToaster />
-
           <AnimatePresence mode="wait">
             {loading ? (
               <Loader onComplete={() => setLoading(false)} />
             ) : (
               <motion.div
                 key="main-content"
-                initial={{ opacity: 0, filter: "blur(10px)" }}
+                initial={{ opacity: 0, filter: "blur(8px)" }}
                 animate={{
                   opacity: 1,
                   filter: "blur(0px)",
-                  transition: { delay: 0.2 },
+                  transition: { delay: 0.3 },
                 }}
-                exit={{ opacity: 0 }}
-                transition={{
-                  duration: 1.2,
-                  ease: [0.22, 1, 0.36, 1],
-                }}
+                exit={{ opacity: 0, filter: "blur(8px)" }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
               >
                 <BrowserRouter basename={baseName}>
                   <Routes>
