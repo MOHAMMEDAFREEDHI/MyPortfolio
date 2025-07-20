@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Loader from "@/components/Loader";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -33,19 +33,21 @@ const App = () => {
                 animate={{
                   opacity: 1,
                   filter: "blur(0px)",
-                  transition: { delay: 0.2 }
+                  transition: { delay: 0.2 },
                 }}
                 exit={{ opacity: 0 }}
                 transition={{
                   duration: 1.2,
-                  ease: [0.22, 1, 0.36, 1]
+                  ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <Router>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/auth" element={<Auth />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Router>
               </motion.div>
             )}
           </AnimatePresence>
