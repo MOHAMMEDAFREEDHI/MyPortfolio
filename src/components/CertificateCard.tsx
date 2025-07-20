@@ -19,34 +19,13 @@ interface CertificateCardProps {
   index: number;
 }
 
-// Function to get dynamic gradient colors based on certificate type
+// Unified color scheme to match project/hero sections
 const getGradientColors = (type: 'certificate' | 'license' | 'award') => {
-  switch (type) {
-    case 'certificate':
-      return {
-        primary: '#6366f1',
-        secondary: '#8b5cf6',
-        accent: '#3b82f6'
-      };
-    case 'license':
-      return {
-        primary: '#10b981',
-        secondary: '#06b6d4',
-        accent: '#0ea5e9'
-      };
-    case 'award':
-      return {
-        primary: '#f59e0b',
-        secondary: '#ec4899',
-        accent: '#f97316'
-      };
-    default:
-      return {
-        primary: '#8b5cf6',
-        secondary: '#ec4899',
-        accent: '#3b82f6'
-      };
-  }
+  return {
+    primary: '#06b6d4', // Cyan
+    secondary: '#8b5cf6', // Purple
+    accent: '#3b82f6' // Blue
+  };
 };
 
 const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
@@ -164,7 +143,7 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
           handleMouseLeave();
         }}
         onClick={toggleExpand}
-        className="relative rounded-2xl p-6 backdrop-blur-xl bg-gradient-to-br from-gray-900/80 to-black border border-gray-700 shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer"
+        className="relative rounded-2xl p-6 backdrop-blur-xl bg-gradient-to-br from-[#0a192f]/80 to-[#0f3460]/80 border border-cyan-500/30 shadow-2xl transition-all duration-500 overflow-hidden cursor-pointer"
         style={{
           boxShadow: `0 10px 30px -10px ${colors.primary}80`,
           transformStyle: 'preserve-3d',
@@ -205,7 +184,7 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
         <div 
           className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent opacity-30"
           style={{
-            background: `linear-gradient(90deg, transparent, ${colors.secondary}, ${colors.accent}, ${colors.primary}, transparent)`,
+            background: `linear-gradient(90deg, transparent, ${colors.primary}, ${colors.secondary}, ${colors.primary}, transparent)`,
             filter: 'blur(1px)'
           }}
         />
@@ -214,13 +193,7 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
           {/* Icon with Halo Effect */}
           <div
             ref={iconRef}
-            className={`relative p-4 rounded-full flex-shrink-0 ${
-              certificate.type === 'certificate'
-                ? 'bg-blue-500/20 text-blue-400'
-                : certificate.type === 'license'
-                ? 'bg-green-500/20 text-green-400'
-                : 'bg-yellow-500/20 text-yellow-400'
-            }`}
+            className="relative p-4 rounded-full flex-shrink-0 bg-cyan-500/20 text-cyan-400"
             style={{
               boxShadow: `0 0 20px ${colors.primary}80`,
               backdropFilter: 'blur(4px)',
@@ -254,20 +227,14 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
           <div className="flex-1">
             {/* Title & Badge */}
             <div className="flex items-start justify-between mb-2">
-              <h3 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors">
+              <h3 className="text-xl font-bold text-cyan-300 group-hover:text-cyan-200 transition-colors">
                 {certificate.title}
                 <div className="text-sm font-normal text-gray-400 mt-1">
                   {certificate.issuer}
                 </div>
               </h3>
               <span
-                className={`px-3 py-1 rounded-full text-xs font-bold shadow-inner ${
-                  certificate.type === 'certificate'
-                    ? 'bg-gradient-to-r from-blue-600/40 to-blue-400/40 text-blue-200'
-                    : certificate.type === 'license'
-                    ? 'bg-gradient-to-r from-green-600/40 to-green-400/40 text-green-200'
-                    : 'bg-gradient-to-r from-yellow-500/40 to-yellow-300/40 text-yellow-200'
-                }`}
+                className="px-3 py-1 rounded-full text-xs font-bold shadow-inner bg-gradient-to-r from-cyan-600/40 to-purple-600/40 text-cyan-200"
                 style={{
                   boxShadow: `0 0 10px ${colors.primary}40`,
                   border: `1px solid ${colors.primary}40`
@@ -280,7 +247,7 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
             {/* Description with expand/collapse */}
             <div className="space-y-2">
               <p 
-                className={`text-gray-400 transition-all duration-500 overflow-hidden ${
+                className={`text-gray-300 transition-all duration-500 overflow-hidden ${
                   isExpanded ? 'max-h-96' : 'max-h-20'
                 }`}
               >
@@ -288,7 +255,7 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
               </p>
               
               <button 
-                className="text-sm text-gray-500 hover:text-gray-300 focus:outline-none transition-colors"
+                className="text-sm text-cyan-500 hover:text-cyan-300 focus:outline-none transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
                   toggleExpand();
@@ -301,9 +268,9 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
             {/* Date & Verify Link */}
             <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-800">
               <div>
-                <span className="text-gray-300 text-sm">Issued: {certificate.date}</span>
+                <span className="text-cyan-300 text-sm">Issued: {certificate.date}</span>
                 {certificate.credentialId && (
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-cyan-500/80 mt-1">
                     ID: {certificate.credentialId}
                   </p>
                 )}
@@ -314,23 +281,20 @@ const CertificateCard = ({ certificate, index }: CertificateCardProps) => {
                   href={certificate.verificationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center group"
-                  style={{
-                    background: `linear-gradient(45deg, ${colors.primary}, ${colors.secondary})`,
-                    boxShadow: `0 4px 15px ${colors.primary}40`
-                  }}
+                  className="group/button relative inline-flex items-center px-4 py-2 bg-gradient-to-r from-[#0a192f] to-[#0f3460] border border-cyan-500/30 rounded-xl text-gray-200 font-medium tracking-wide transition-all duration-500 hover:border-cyan-500/80 hover:shadow-[0_0_20px_rgba(0,245,255,0.3)] hover:scale-[1.05] overflow-hidden"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  Verify Credential
+                  <span className="relative z-10">Verify Credential</span>
                   <svg 
                     xmlns="http://www.w3.org/2000/svg" 
-                    className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" 
+                    className="h-4 w-4 ml-2 group-hover/button:translate-x-1 transition-transform" 
                     fill="none" 
                     viewBox="0 0 24 24" 
                     stroke="currentColor"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                   </svg>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/20 to-cyan-500/0 opacity-0 group-hover/button:opacity-100 transition-all duration-700 -translate-x-full group-hover/button:translate-x-0"></div>
                 </a>
               )}
             </div>

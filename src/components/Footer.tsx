@@ -1,4 +1,3 @@
-import { Heart } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const Footer = () => {
@@ -13,30 +12,34 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="bg-gradient-to-b from-gray-900 to-gray-950 py-10 relative overflow-hidden">
+    <footer className="bg-gradient-to-b from-[#05051f] via-[#0a0a30] to-[#020217] py-10 relative overflow-hidden">
       {/* Enhanced background effects */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
         <div className="absolute inset-0 [background-image:radial-gradient(circle_at_center,rgba(180,180,180,0.03)_0.5px,transparent_0.5px)] [background-size:16px_16px]"></div>
       </div>
       
-      {/* Floating particles */}
-      <div className="absolute inset-0 flex justify-center items-center pointer-events-none">
-        {[...Array(15)].map((_, i) => (
-          <div 
-            key={i}
-            className="absolute rounded-full opacity-20 animate-float"
-            style={{
-              width: `${Math.random() * 6 + 2}px`,
-              height: `${Math.random() * 6 + 2}px`,
-              background: `rgba(${Math.random() > 0.5 ? 236 : 139}, ${Math.random() > 0.5 ? 72 : 92}, ${Math.random() > 0.5 ? 153 : 246}, 0.6)`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDuration: `${Math.random() * 10 + 10}s`,
-              animationDelay: `${Math.random() * 5}s`
-            }}
-          ></div>
-        ))}
+      {/* Floating particles - same as contact section */}
+      {[...Array(15)].map((_, i) => (
+        <div 
+          key={i}
+          className="floating-particle absolute rounded-full opacity-10"
+          style={{
+            width: `${Math.random() * 20 + 5}px`,
+            height: `${Math.random() * 20 + 5}px`,
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            background: `radial-gradient(circle, 
+              ${i % 3 === 0 ? '#6366f1' : i % 3 === 1 ? '#ec4899' : '#3b82f6'}, 
+              transparent)`
+          }}
+        />
+      ))}
+      
+      {/* Background Gradient - same as contact section */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-purple-500 rounded-full mix-blend-soft-light filter blur-[100px] opacity-30 animate-pulse-slow"></div>
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-soft-light filter blur-[120px] opacity-20 animate-pulse-slower"></div>
       </div>
 
       {/* Top border accent */}
@@ -92,25 +95,24 @@ const Footer = () => {
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-purple-600 to-transparent"></div>
             
             <p className="text-gray-400 flex items-center justify-center text-sm font-light">
-  Developed 
-  <span
-    className="mx-1.5 text-pink-400 animate-pulse"
-    aria-hidden="true"
-  >
-    ✦
-  </span> 
-  by
-  <span
-    className="ml-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent font-medium hover:underline transition duration-300 ease-in-out cursor-pointer"
-    aria-label="Mohammed Afreedhi"
-  >
-    Mohammed Afreedhi
-  </span>
-</p>
-<p className="text-gray-500 text-xs mt-2 tracking-wider">
-  © 2025 Mohammed Afreedhi • All Rights Reserved
-</p>
-
+              Developed 
+              <span
+                className="mx-1.5 text-pink-400 animate-pulse"
+                aria-hidden="true"
+              >
+                ✦
+              </span> 
+              by
+              <span
+                className="ml-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent font-medium hover:underline transition duration-300 ease-in-out cursor-pointer"
+                aria-label="Mohammed Afreedhi"
+              >
+                Mohammed Afreedhi
+              </span>
+            </p>
+            <p className="text-gray-500 text-xs mt-2 tracking-wider">
+              © 2025 Mohammed Afreedhi • All Rights Reserved
+            </p>
           </div>
         </div>
       </div>
@@ -154,6 +156,49 @@ const Footer = () => {
         
         .animate-float {
           animation: float 15s ease-in-out infinite;
+        }
+
+        /* Add the floating animation from contact section */
+        .floating-particle {
+          animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+          0% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+          100% {
+            transform: translateY(0);
+          }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% {
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+        
+        @keyframes pulse-slower {
+          0%, 100% {
+            opacity: 0.2;
+          }
+          50% {
+            opacity: 0.3;
+          }
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        .animate-pulse-slower {
+          animation: pulse-slower 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
       `}</style>
     </footer>

@@ -71,7 +71,7 @@ const AboutSection = () => {
         ease: "power3.out",
         onUpdate: function() {
           const progress = this.progress();
-          setCountedProjects(Math.floor(45 * progress));
+          setCountedProjects(Math.floor(10 * progress));
         }
       });
       
@@ -80,7 +80,7 @@ const AboutSection = () => {
         ease: "power3.out",
         onUpdate: function() {
           const progress = this.progress();
-          setCountedExperience(Math.floor(8 * progress));
+          setCountedExperience(Math.floor(2 * progress));
         }
       });
       
@@ -396,7 +396,7 @@ const AboutSection = () => {
                   <h3 className="text-4xl font-bold text-blue-400 mb-2">
                     {countedProjects}+
                   </h3>
-                  <p className="text-gray-400 font-medium">Enterprise Projects</p>
+                  <p className="text-gray-400 font-medium">Personal & Academic Projects</p>
                 </div>
               </div>
               
@@ -404,9 +404,9 @@ const AboutSection = () => {
                 <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-600 to-emerald-600 rounded-xl blur opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
                 <div className="relative bg-gray-900/90 backdrop-blur-lg rounded-xl p-6 border border-gray-800 group-hover:border-cyan-500 transition-all">
                   <h3 className="text-4xl font-bold text-cyan-400 mb-2">
-                    {countedExperience}
+                    {countedExperience}+
                   </h3>
-                  <p className="text-gray-400 font-medium">Years Experience</p>
+                  <p className="text-gray-400 font-medium">Years of Hands-On Practice</p>
                 </div>
               </div>
             </div>

@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Loader = ({ onComplete }: { onComplete: () => void }) => {
+const CosmicLoader = ({ onComplete }: { onComplete: () => void }) => {
   const [stage, setStage] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [sparksCount] = useState(() => Math.floor(window.innerWidth / 10));
+  const [sparksCount] = useState(() => Math.floor(window.innerWidth / 8));
+  
+  // Constellation data
+  const constellations = [
+    { id: 1, x: 15, y: 20, size: 1.8, delay: 0.2 },
+    { id: 2, x: 85, y: 30, size: 1.2, delay: 0.4 },
+    { id: 3, x: 25, y: 75, size: 1.5, delay: 0.6 },
+    { id: 4, x: 70, y: 65, size: 2.0, delay: 0.8 },
+  ];
 
   useEffect(() => {
     // Preload audio
@@ -13,11 +21,11 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
     audioRef.current.preload = "auto";
 
     const timers = [
-      setTimeout(() => setStage(1), 1800), // Faster transition to stage 1
+      setTimeout(() => setStage(1), 1600),
       setTimeout(() => {
         setStage(2);
-        setTimeout(onComplete, 1200); // Shorter exit delay
-      }, 4500) // Total duration reduced to 4.5s
+        setTimeout(onComplete, 1000);
+      }, 4200)
     ];
 
     return () => {
@@ -33,7 +41,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
     try {
       if (!audioRef.current) return;
       
-      // Try Web Audio API first for better timing
+      // Try Web Audio API for better timing
       const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
       const context = new AudioContext();
       if (context.state === "suspended") await context.resume();
@@ -58,71 +66,113 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
 
   useEffect(() => {
     if (stage === 1) {
-      playSound(); // Play sound when stage 1 is reached
+      playSound();
     }
   }, [stage]);
 
   return (
     <div className="fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden select-none">
-      {/* Animated Cosmic Background */}
+      {/* Cosmic Nebula Background */}
       <motion.div 
-        className="absolute inset-0 bg-gradient-to-br from-black via-gray-900/60 to-black"
+        className="absolute inset-0 bg-gradient-to-br from-[#05051f] via-[#0a0a30] to-[#020217]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8 }}
       />
-
-      {/* Particle Background */}
-      <motion.div 
-        className="absolute inset-0 overflow-hidden"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-      >
-        {Array.from({ length: 30 }).map((_, i) => (
+      
+      {/* Animated Nebula Layers */}
+      <motion.div className="absolute inset-0">
+        <motion.div 
+          className="absolute w-[60vw] h-[60vw] bg-gradient-to-br from-[#00aacc33] to-[#0033cc33] rounded-full blur-[100px] top-[20%] left-[15%]"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.4 }}
+          transition={{ delay: 0.3, duration: 1.5, ease: "easeOut" }}
+        />
+        <motion.div 
+          className="absolute w-[40vw] h-[40vw] bg-gradient-to-br from-[#4b008233] to-[#6a5acd33] rounded-full blur-[80px] bottom-[20%] right-[20%]"
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.3 }}
+          transition={{ delay: 0.5, duration: 1.5, ease: "easeOut" }}
+        />
+      </motion.div>
+      
+      {/* Particle System */}
+      <motion.div className="absolute inset-0 overflow-hidden">
+        {Array.from({ length: 40 }).map((_, i) => (
           <motion.div
             key={`particle-${i}`}
-            className="absolute rounded-full bg-white/10"
+            className="absolute rounded-full bg-cyan-500/20"
             style={{
-              width: `${Math.random() * 3 + 1}px`,
-              height: `${Math.random() * 3 + 1}px`,
+              width: `${Math.random() * 4 + 1}px`,
+              height: `${Math.random() * 4 + 1}px`,
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
+            initial={{ opacity: 0, scale: 0 }}
             animate={{
-              y: [0, (Math.random() - 0.5) * 100],
-              x: [0, (Math.random() - 0.5) * 100],
-              opacity: [0.2, 0.8, 0.2],
+              opacity: [0, 0.8, 0],
+              scale: [0, 1.5, 0],
+              x: Math.random() * 100 - 50,
+              y: Math.random() * 100 - 50,
             }}
             transition={{
-              duration: Math.random() * 10 + 10,
+              duration: Math.random() * 8 + 6,
+              delay: Math.random() * 1.5,
               repeat: Infinity,
-              repeatType: "reverse",
-              ease: "linear",
+              repeatType: "loop",
+              ease: "easeOut"
             }}
           />
         ))}
       </motion.div>
+      
+      {/* Constellations */}
+      {constellations.map((star) => (
+        <motion.div
+          key={`constellation-${star.id}`}
+          className="absolute"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: `${star.size * 10}px`,
+            height: `${star.size * 10}px`,
+          }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ 
+            opacity: [0, 0.8, 0.3], 
+            scale: [0, star.size, star.size * 0.8] 
+          }}
+          transition={{
+            duration: 1.5,
+            delay: star.delay,
+            ease: "easeOut"
+          }}
+        >
+          <div className="w-full h-full bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full blur-[2px]"></div>
+          <div className="absolute inset-0 rounded-full bg-cyan-300 animate-ping opacity-30"></div>
+        </motion.div>
+      ))}
 
-      {/* Stage 0: Spark Burst */}
+      {/* Stage 0: Cosmic Spark Burst */}
       {stage === 0 && (
         <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
-          {/* Dynamic sparks based on screen size */}
           {Array.from({ length: sparksCount }).map((_, i) => {
-            const size = Math.random() * 5 + 2;
+            const size = Math.random() * 6 + 2;
             const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 150 + 50;
-            const duration = Math.random() * 0.8 + 0.4;
+            const distance = Math.random() * 200 + 50;
+            const duration = Math.random() * 0.7 + 0.3;
+            const hue = Math.random() * 60 + 180;
             
             return (
               <motion.div
                 key={`spark-${i}`}
-                className="absolute rounded-full bg-gradient-to-br from-[#8A2BE2] via-[#FF00FF] to-[#00FFFF]"
+                className="absolute rounded-full"
                 style={{
                   width: `${size}px`,
                   height: `${size}px`,
-                  boxShadow: `0 0 ${size * 3}px ${size * 1.5}px rgba(138, 43, 226, 0.5)`,
+                  background: `hsl(${hue}, 100%, 70%)`,
+                  boxShadow: `0 0 ${size * 3}px hsl(${hue}, 100%, 50%)`,
                 }}
                 initial={{ 
                   x: 0,
@@ -134,32 +184,25 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
                   x: Math.cos(angle) * distance,
                   y: Math.sin(angle) * distance,
                   opacity: [0, 1, 0],
-                  scale: [0.3, 1.5, 0.1],
+                  scale: [0.3, 1.8, 0.1],
                 }}
                 transition={{
                   duration,
-                  delay: Math.random() * 0.5,
-                  repeat: Infinity,
-                  repeatType: "loop",
+                  delay: Math.random() * 0.3,
                   ease: "easeOut"
                 }}
               />
             );
           })}
 
-          {/* Pulsing Center Symbol */}
+          {/* Pulsing Quantum Core */}
           <motion.div
-            className="absolute text-8xl md:text-9xl"
-            initial={{ opacity: 0, scale: 0.5 }}
+            className="absolute flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.3 }}
             animate={{
               opacity: [0.3, 1, 0.3],
-              scale: [0.5, 1.3, 1],
+              scale: [0.3, 1.3, 1],
               rotate: [0, 360],
-              textShadow: [
-                "0 0 10px rgba(138,43,226,0.5)",
-                "0 0 30px rgba(255,0,255,0.7)",
-                "0 0 20px rgba(0,255,255,0.6)",
-              ],
             }}
             transition={{
               duration: 2.5,
@@ -167,18 +210,21 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               ease: "easeInOut",
             }}
           >
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8A2BE2] via-[#FF00FF] to-[#00FFFF]">
-              ✦
-            </span>
+            <div className="w-40 h-40 rounded-full bg-gradient-to-br from-cyan-500 via-blue-500 to-indigo-600 blur-[20px] opacity-60"></div>
+            <div className="absolute text-8xl md:text-9xl">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#8A2BE2] via-[#6A5ACD] to-[#00FFFF]">
+                ✦
+              </span>
+            </div>
           </motion.div>
         </div>
       )}
 
-      {/* Stage 1: Logo Reveal */}
+      {/* Stage 1: Logo Quantum Reveal */}
       <AnimatePresence mode="wait">
         {stage >= 1 && (
           <motion.div
-            className="flex items-center space-x-3 text-7xl md:text-9xl font-extrabold relative"
+            className="flex items-center space-x-3 text-7xl md:text-9xl font-extrabold relative z-20"
             initial={{ opacity: 0, scale: 0.6, rotateY: -180 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.8 } }}
@@ -188,12 +234,12 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               rotateY: { duration: 1.2 } 
             }}
           >
-            {/* Pulsing Aura */}
+            {/* Quantum Aura */}
             <motion.div
-              className="absolute w-40 h-40 rounded-full bg-gradient-to-r from-[#8A2BE2] via-[#FF00FF] to-[#00FFFF] blur-xl opacity-70"
+              className="absolute w-48 h-48 rounded-full bg-gradient-to-r from-[#8A2BE2] via-[#6A5ACD] to-[#00FFFF] blur-2xl opacity-70"
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{
-                scale: [0.8, 1.3, 0.8],
+                scale: [0.8, 1.4, 0.8],
                 opacity: [0.4, 0.7, 0.4],
               }}
               transition={{
@@ -203,9 +249,9 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
               }}
             />
 
-            {/* Animated Logo Elements */}
+            {/* Logo Elements with Quantum Entanglement */}
             <motion.span
-              className="text-transparent bg-clip-text bg-gradient-to-r from-[#8A2BE2] via-[#FF00FF] to-[#00FFFF]"
+              className="text-transparent bg-clip-text bg-gradient-to-r from-[#8A2BE2] via-[#6A5ACD] to-[#00FFFF]"
               initial={{ y: -250, opacity: 0, rotate: -720 }}
               animate={{
                 y: 0,
@@ -213,7 +259,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
                 rotate: 0,
                 textShadow: [
                   "0 0 20px rgba(138,43,226,0.8)",
-                  "0 0 40px rgba(255,0,255,0.9)",
+                  "0 0 40px rgba(106,90,205,0.9)",
                   "0 0 30px rgba(0,255,255,0.7)",
                 ],
               }}
@@ -226,14 +272,14 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
             </motion.span>
 
             <motion.span
-              className="text-transparent bg-clip-text bg-gradient-to-r from-[#8A2BE2] via-[#FF00FF] to-[#00FFFF]"
+              className="text-transparent bg-clip-text bg-gradient-to-r from-[#8A2BE2] via-[#6A5ACD] to-[#00FFFF]"
               initial={{ x: 200, opacity: 0 }}
               animate={{ 
                 x: 0, 
                 opacity: 1,
                 textShadow: [
                   "0 0 10px rgba(138,43,226,0.5)",
-                  "0 0 20px rgba(255,0,255,0.7)",
+                  "0 0 20px rgba(106,90,205,0.7)",
                   "0 0 15px rgba(0,255,255,0.6)",
                 ],
               }}
@@ -249,20 +295,48 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
         )}
       </AnimatePresence>
 
-      {/* Stage 2: Exit Animation */}
+      {/* Stage 2: Quantum Collapse */}
       <AnimatePresence>
         {stage === 2 && (
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 bg-black"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
-          />
+          >
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-br from-[#8A2BE2] via-[#6A5ACD] to-[#00FFFF]"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            />
+            <motion.div 
+              className="absolute inset-0 bg-black"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.4 }}
+            />
+          </motion.div>
         )}
       </AnimatePresence>
+      
+      {/* Loading Progress */}
+      <motion.div 
+        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 w-64 h-1 bg-gray-800 rounded-full overflow-hidden"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        <motion.div 
+          className="h-full bg-gradient-to-r from-[#8A2BE2] via-[#6A5ACD] to-[#00FFFF]"
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 3.5, ease: "easeInOut" }}
+        />
+      </motion.div>
     </div>
   );
 };
 
-export default Loader;
+export default CosmicLoader;

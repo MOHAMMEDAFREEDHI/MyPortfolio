@@ -2,56 +2,76 @@ import { useState, useEffect, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import gsap from "gsap";
 
-// Animated Sparkle Component (preserved as requested)
+// Enhanced Animated Sparkle Component
 const AnimatedSparkle = () => {
-  const [glowIntensity, setGlowIntensity] = useState(0);
-  const animationRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    const animateGlow = () => {
-      const intensity = Math.abs(Math.sin(Date.now() / 800));
-      setGlowIntensity(intensity);
-      animationRef.current = requestAnimationFrame(animateGlow);
-    };
-
-    animationRef.current = requestAnimationFrame(animateGlow);
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
-
   return (
     <span className="relative inline-block w-4 h-4">
       <span
-        className="absolute inset-0 rounded-full"
+        className="absolute inset-0 rounded-full opacity-60"
         style={{
-          filter: `blur(${glowIntensity * 10}px)`,
-          background: `radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(192,132,252,0.6) 30%, rgba(99,102,241,0.4) 70%, rgba(6,182,212,0.2) 100%)`,
-          opacity: glowIntensity * 0.6,
-          transition: 'all 1.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          filter: 'blur(8px)',
+          background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(192,132,252,0.6) 30%, rgba(99,102,241,0.4) 70%, rgba(6,182,212,0.2) 100%)',
           width: '2.5rem',
           height: '2.5rem',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          zIndex: -1
+          zIndex: -1,
+          animation: 'pulse-glow 3s infinite alternate'
         }}
       />
       <span
-        className="text-purple-300 relative z-10 inline-block transition-all duration-700"
+        className="text-purple-300 relative z-10 inline-block"
         style={{
-          textShadow: `0 0 ${glowIntensity * 10}px rgba(192, 132, 252, 0.7), 
-                       0 0 ${glowIntensity * 15}px rgba(22, 25, 189, 0.5)`,
-          transform: `scale(${1 + glowIntensity * 0.9})`,
-          animation: 'spin-diamond 8s linear infinite'
+          textShadow: '0 0 10px rgba(192, 132, 252, 0.7), 0 0 20px rgba(22, 25, 189, 0.5)',
+          animation: 'spin-diamond 8s linear infinite, pulse-scale 2s infinite alternate'
         }}
       >
         ✦
       </span>
     </span>
+  );
+};
+
+// Floating Particles Component
+const FloatingParticles = ({ count = 5 }: { count?: number }) => {
+  return (
+    <span className="absolute -inset-2 overflow-hidden rounded-lg pointer-events-none">
+      {[...Array(count)].map((_, i) => (
+        <span
+          key={i}
+          className="absolute w-1 h-1 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100 group-hover:animate-float"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${i * 0.2}s`,
+          }}
+        />
+      ))}
+    </span>
+  );
+};
+
+// Logo Component with Enhanced Glow
+const Logo = () => {
+  return (
+    <h1 className="text-2xl font-bold tracking-tight">
+      <span className="relative inline-block group transform transition-all duration-700">
+        <FloatingParticles />
+        
+        <span className="absolute -inset-1 bg-[length:300%_300%] bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-500 rounded-lg blur opacity-70 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105 animate-gradient group-hover:animate-gradient-fast"></span>
+        
+        <span className="relative px-3 py-1.5 bg-black/80 rounded-lg flex items-center group-hover:bg-gray-900/90 transition-all duration-500 shadow-[0_0_15px_rgba(0,204,170,0.5)] group-hover:shadow-[0_0_25px_rgba(0,170,204,0.7)]">
+          <span className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-purple-300 bg-clip-text text-white font-bold tracking-wider text-xl relative">
+            <span className="relative z-10">MOHAMMED AFREEDHI</span>
+            <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-400 blur-md opacity-70 group-hover:opacity-90 transition-opacity duration-500"></span>
+          </span>
+          <span className="ml-2 relative">
+            <AnimatedSparkle />
+          </span>
+        </span>
+      </span>
+    </h1>
   );
 };
 
@@ -62,15 +82,11 @@ const Navigation = () => {
   const particlesRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 10);
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Particle animation
   useEffect(() => {
     particlesRef.current.forEach((particle, i) => {
       gsap.to(particle, {
@@ -95,19 +111,15 @@ const Navigation = () => {
   ];
 
   const scrollTo = (id: string) => {
-    const element = document.querySelector(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    document.querySelector(id)?.scrollIntoView({ behavior: "smooth" });
     setIsOpen(false);
   };
 
-  // Create particle elements for navbar
   const navParticles = Array.from({ length: 8 }, (_, i) => {
     const size = Math.random() * 4 + 1;
     const posX = Math.random() * 100;
     const posY = Math.random() * 100;
-    const hue = Math.random() * 60 + 180; // Blue/cyan range
+    const hue = Math.random() * 60 + 180;
     
     return (
       <div
@@ -135,47 +147,19 @@ const Navigation = () => {
         scrolled ? "py-0 bg-black/80 backdrop-blur-lg" : "py-2"
       }`}
     >
-      {/* Nebula background */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:40px_40px] opacity-30"></div>
         <div className="absolute top-1/2 left-1/2 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_center,rgba(22,78,99,0.15)_0%,transparent_70%)] -translate-x-1/2 -translate-y-1/2"></div>
         {navParticles}
       </div>
       
-      {/* Glowing accent lines */}
       <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent"></div>
       <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-500/20 to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="nav-item flex-shrink-0">
-            <h1 className="text-2xl font-bold tracking-tight">
-              <span className="relative inline-block group transform transition-all duration-700">
-                <span className="absolute -inset-2 overflow-hidden rounded-lg">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className="absolute w-1 h-1 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100 group-hover:animate-float"
-                      style={{
-                        top: `${Math.random() * 100}%`,
-                        left: `${Math.random() * 100}%`,
-                        animationDelay: `${i * 0.2}s`,
-                      }}
-                    />
-                  ))}
-                </span>
-                <span className="absolute -inset-1 bg-[length:300%_300%] bg-gradient-to-r from-cyan-600 via-indigo-600 to-purple-500 rounded-lg blur opacity-70 group-hover:opacity-100 transition-all duration-1000 group-hover:scale-105 animate-gradient group-hover:animate-gradient-fast"></span>
-<span className="relative px-3 py-1.5 bg-black/80 rounded-lg flex items-center group-hover:bg-gray-900/90 transition-all duration-500 shadow-[0_0_15px_#00ccaa] group-hover:shadow-[0_0_25px_#00aacc]">
-  <span className="bg-gradient-to-r from-cyan-300 via-indigo-300 to-purple-300 bg-clip-text text-white font-bold tracking-wider text-xl relative">
-    <span className="relative z-10">MOHAMMED AFREEDHI</span>
-    <span className="absolute inset-0 bg-gradient-to-r from-cyan-400 via-indigo-500 to-purple-400 blur-md opacity-70 group-hover:opacity-90 transition-opacity duration-500"></span>
-                  </span>
-                  <span className="ml-2 relative">
-                    <AnimatedSparkle />
-                  </span>
-                </span>
-              </span>
-            </h1>
+            <Logo />
           </div>
 
           <div className="hidden md:block">
