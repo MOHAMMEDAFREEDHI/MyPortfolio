@@ -2,11 +2,10 @@ import { useState, useEffect } from 'react';
 
 const Footer = () => {
   const [glowIntensity, setGlowIntensity] = useState(1);
-  
-  // Create pulsing effect for the diamond
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setGlowIntensity(prev => prev === 1 ? 1.2 : 1);
+      setGlowIntensity(prev => (prev === 1 ? 1.2 : 1));
     }, 2000);
     return () => clearInterval(interval);
   }, []);
@@ -18,10 +17,10 @@ const Footer = () => {
         <div className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,transparent_60%,black)]"></div>
         <div className="absolute inset-0 [background-image:radial-gradient(circle_at_center,rgba(180,180,180,0.03)_0.5px,transparent_0.5px)] [background-size:16px_16px]"></div>
       </div>
-      
-      {/* Floating particles - same as contact section */}
+
+      {/* Floating particles */}
       {[...Array(15)].map((_, i) => (
-        <div 
+        <div
           key={i}
           className="floating-particle absolute rounded-full opacity-10"
           style={{
@@ -35,8 +34,8 @@ const Footer = () => {
           }}
         />
       ))}
-      
-      {/* Background Gradient - same as contact section */}
+
+      {/* Background Gradient */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-purple-500 rounded-full mix-blend-soft-light filter blur-[100px] opacity-30 animate-pulse-slow"></div>
         <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-cyan-500 rounded-full mix-blend-soft-light filter blur-[120px] opacity-20 animate-pulse-slower"></div>
@@ -52,12 +51,8 @@ const Footer = () => {
               className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-600 to-cyan-500 drop-shadow-lg transition-all duration-500 ease-out cursor-pointer hover:animate-text-shine"
               aria-label="AFxLabs"
             >
-              {/* Enhanced diamond symbol with glow effect */}
-              <span 
-                className="inline-block relative"
-                aria-hidden="true"
-              >
-                <span 
+              <span className="inline-block relative" aria-hidden="true">
+                <span
                   className="absolute inset-0 rounded-full"
                   style={{
                     filter: `blur(${glowIntensity * 10}px)`,
@@ -72,7 +67,7 @@ const Footer = () => {
                     zIndex: -1
                   }}
                 />
-                <span 
+                <span
                   className="mx-1.5 text-purple-300 relative z-10 inline-block transition-all duration-700"
                   style={{
                     textShadow: `0 0 ${glowIntensity * 10}px rgba(192, 132, 252, 0.7), 
@@ -90,23 +85,17 @@ const Footer = () => {
               Passionate Full Stack Developer with expertise in AI, ML, Blockchain, and modern web technologies. Delivering innovative, secure, and futuristic solutions.
             </p>
           </div>
-          
+
           <div className="pt-8 border-t border-gray-800/50 relative">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-24 h-px bg-gradient-to-r from-transparent via-purple-600 to-transparent"></div>
-            
+
             <p className="text-gray-400 flex items-center justify-center text-sm font-light">
-              Developed 
-              <span
-                className="mx-1.5 text-pink-400 animate-pulse"
-                aria-hidden="true"
-              >
+              Developed
+              <span className="mx-1.5 text-pink-400 animate-pulse" aria-hidden="true">
                 ✦
-              </span> 
+              </span>
               by
-              <span
-                className="ml-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent font-medium hover:underline transition duration-300 ease-in-out cursor-pointer"
-                aria-label="Mohammed Afreedhi"
-              >
+              <span className="ml-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 bg-clip-text text-transparent font-medium hover:underline transition duration-300 ease-in-out cursor-pointer">
                 Mohammed Afreedhi
               </span>
             </p>
@@ -116,8 +105,9 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      
-      <style jsx global>{`
+
+      {/* Fixed: Standard <style> tag for non-Next.js projects */}
+      <style>{`
         @keyframes spin-diamond {
           0% {
             transform: scale(1) rotate(0deg);
@@ -135,7 +125,7 @@ const Footer = () => {
             transform: scale(1) rotate(360deg);
           }
         }
-        
+
         @keyframes float {
           0% {
             transform: translateY(0) translateX(0) rotate(0deg);
@@ -153,16 +143,15 @@ const Footer = () => {
             transform: translateY(0) translateX(0) rotate(0deg);
           }
         }
-        
+
         .animate-float {
           animation: float 15s ease-in-out infinite;
         }
 
-        /* Add the floating animation from contact section */
         .floating-particle {
           animation: floating 3s ease-in-out infinite;
         }
-        
+
         @keyframes floating {
           0% {
             transform: translateY(0);
@@ -174,7 +163,7 @@ const Footer = () => {
             transform: translateY(0);
           }
         }
-        
+
         @keyframes pulse-slow {
           0%, 100% {
             opacity: 0.3;
@@ -183,7 +172,7 @@ const Footer = () => {
             opacity: 0.5;
           }
         }
-        
+
         @keyframes pulse-slower {
           0%, 100% {
             opacity: 0.2;
@@ -192,11 +181,11 @@ const Footer = () => {
             opacity: 0.3;
           }
         }
-        
+
         .animate-pulse-slow {
           animation: pulse-slow 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
-        
+
         .animate-pulse-slower {
           animation: pulse-slower 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }

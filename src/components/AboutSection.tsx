@@ -533,7 +533,7 @@ const AboutSection = () => {
       </div>
       
       {/* Embedded CSS Animations */}
-      <style jsx global>{`
+      <style >{`
         .particle {
           animation: float 25s infinite ease-in-out;
           will-change: transform;
