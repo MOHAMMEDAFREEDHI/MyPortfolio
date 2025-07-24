@@ -660,23 +660,7 @@ const SkillsSection = () => {
       </motion.div>
       
       {/* Custom styles for logo glow */}
-      <style jsx global>{`
-        .icon-container {
-          transition: all 0.3s ease;
-          position: relative;
-          display: inline-block;
-          z-index: 2;
-        }
-        
-        .threejs-logo {
-          filter: drop-shadow(0 0 0px transparent);
-          transition: filter 0.3s ease;
-        }
-        
-        .icon-container:hover .threejs-logo {
-          filter: drop-shadow(0 0 10px #3FA9F5);
-        }
-      `}</style>
+    
     </section>
   );
 };
